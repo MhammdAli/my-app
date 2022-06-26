@@ -12,7 +12,7 @@ const EditUser = (props : any) => {
      <Center>
         <form className='md:w-10/12 w-11/12'>
            <div className='space-y-3'>
-              <h1 className='dark:text-textColor-dark md:text-5xl text-3xl py-2'>Create User</h1>
+              <h1 className='dark:text-textColor-dark md:text-5xl text-3xl py-2'>Update User</h1>
            
               <Input startIcon={<FaUser/>} placeholder='Enter Your FirstName'/>
               <Input  startIcon={<FaUser/>} placeholder='Enter Your LastName'/>
@@ -20,7 +20,7 @@ const EditUser = (props : any) => {
               <Input  startIcon={<FaMobile/>} placeholder='Enter Your Mobile' type='number' />
 
               <div className='flex justify-end'>
-                <Button StartIcon={<FaUser/>} title='Create User' type='submit' />
+                <Button StartIcon={<FaUser/>} title='Edit User' type='submit' />
               </div>
            </div>
         </form> 
