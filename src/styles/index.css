@@ -243,3 +243,27 @@
  
 /******************************************8*/
 
+
+@layer components{
+  table{
+    @apply border-collapse w-full
+  }
+
+  table td , table th{
+    @apply border border-solid text-bodyColor-dark dark:text-bodyColor-light p-2 
+  }
+
+  table tr:nth-child(even){
+    @apply hover:bg-primary-light transition-all duration-500
+  }
+
+
+  table tr{
+    @apply hover:bg-primary-lighter
+  }
+
+  table th{
+    @apply py-3 text-center bg-primary-light text-white
+  }
+
+}
