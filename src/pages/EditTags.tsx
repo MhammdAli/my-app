@@ -19,7 +19,7 @@ const EditTags = (props : any) => {
               <TextArea rows={3} StartIcon={<FaComment size={15}/>} placeholder='description' />
              
               <div className='flex justify-end'>
-                <Button StartIcon={<FaTag/>} title='Create Tag' type='submit' />
+                <Button StartIcon={<FaTag/>} title='Edit Tag' type='submit' />
               </div>
            </div>
         </form> 
