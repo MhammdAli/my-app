@@ -8,6 +8,9 @@ import EditPost from 'pages/EditPost';
 import EditTags from 'pages/EditTags';
 import EditUser from 'pages/EditUser'; 
 import Home from 'pages/Home';
+import PostsView from 'pages/PostsView';
+import TagsView from 'pages/TagsView';
+import UsersView from 'pages/UsersView';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -32,6 +35,9 @@ function App() {
               <Route path='/Edit/tag/:id' element={<EditTags/>}/>
               <Route path='/Edit/post/:id' element={<EditPost/>}/>
               <Route path='/Edit/user/:id' element={<EditUser/>}/>
+              <Route path='/users' element={<UsersView/>}/>
+              <Route path='/posts' element={<PostsView/>}/> 
+              <Route path='/tags' element={<TagsView/>}/> 
               <Route path='*' element={<NotFound/>}/>
             </Routes>
          </div>
