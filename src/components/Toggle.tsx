@@ -8,10 +8,8 @@ interface ToogleProps extends Pick<React.HTMLAttributes<any>,'onClick'|'classNam
  
  const Toggle : React.FC<ToogleProps> = ({open,...rest}) => {
      
-    
- 
    return (
-     <div className='toggle-switch ' {...rest} >
+     <div className='toggle-switch' {...rest} >
          <span className={`switch ${open && 'open'}`}></span>
      </div>
    )

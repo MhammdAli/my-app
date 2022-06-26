@@ -5,7 +5,7 @@ import Menu from 'baseComponents/Menu';
 import Sidebar from 'baseComponents/Sidebar';
 import Toggle from 'components/Toggle';
 import React, { memo, useState } from 'react'
-import { FaChevronRight, FaDailymotion, FaHome, FaMoon, FaSign, FaSun, FaUser } from 'react-icons/fa';
+import { FaChevronRight, FaHome, FaMoon, FaSign, FaSun, FaTags, FaUser } from 'react-icons/fa';
  
 import Logo from 'assets/logo.jpg';
 import { useTheme } from 'hooks/useTheme';
@@ -42,7 +42,7 @@ const SideBar = () => {
             <Menu> 
               <Item title='Create User' Icon={<FaUser/>} to={'/create/user'} />
               <Item title='Create Post' Icon={<FaHome/>} to={'/create/post'}/>
-              <Item title='Create Tag' Icon={<FaDailymotion/>} to={'/create/tag'}/> 
+              <Item title='Create Tag' Icon={<FaTags/>} to={'/create/tag'}/> 
             </Menu>
     
             <Footer> 
