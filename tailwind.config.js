@@ -8,7 +8,7 @@ module.exports = {
       colors : {
         primary : {
           dark : '#3a3b3c',
-          light : '#695CFE',
+          light : '#1e81b0',
           lighter : '#9F97FE'
         },
         textColor : { 
@@ -22,6 +22,10 @@ module.exports = {
         bodyColor : {
           dark : '#18191a',
           light : '#E4E9F7'
+        },
+        toggle : {
+          dark : '#fff',
+          light : '#1e81b0'
         },
       }
     },
