@@ -40,6 +40,7 @@ const SideBar = () => {
             </Header>
     
             <Menu> 
+              <Item title='Home Page' Icon={<FaHome/>} to={'/'} />
               <Item title='Create User' Icon={<FaUser/>} to={'/create/user'} />
               <Item title='Create Post' Icon={<FaHome/>} to={'/create/post'}/>
               <Item title='Create Tag' Icon={<FaTags/>} to={'/create/tag'}/> 

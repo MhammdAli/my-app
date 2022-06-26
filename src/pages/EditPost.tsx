@@ -47,7 +47,7 @@ const EditPost = (props : any) => {
               />
 
               <div className='flex justify-end'>
-                <Button StartIcon={<FaBlog/>} title='Create Post' type='submit' />
+                <Button StartIcon={<FaBlog/>} title='Edit Post' type='submit' />
               </div>
 
            </div>
