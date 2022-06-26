@@ -8,11 +8,13 @@ import React, { memo, useState } from 'react'
 import { FaChevronRight, FaDailymotion, FaHome, FaMoon, FaSign, FaSun, FaUser } from 'react-icons/fa';
  
 import Logo from 'assets/logo.jpg';
+import { useTheme } from 'hooks/useTheme';
 
 const SideBar = () => {
      
+    const {toggle,mode} = useTheme();
 
-    const [check , setCheck] = useState(false);
+    const [check, setCheck] = useState<boolean>(mode === 'dark');
    
     const [open,setOpen] = useState(false);
     
@@ -25,8 +27,8 @@ const SideBar = () => {
                   </span>
     
                   <div className="text logo-text">
-                      <span className="name">Codinglab</span>
-                      <span className="profession">Web developer</span>
+                      <span className="name">Testing Project</span>
+                      <span className="profession">Web App</span>
                   </div>
               </div> 
               
@@ -38,9 +40,9 @@ const SideBar = () => {
             </Header>
     
             <Menu> 
-              <Item title='User' Icon={<FaUser/>} to={'/create/user'} />
-              <Item title='Home' Icon={<FaHome/>} to={'/'}/>
-              <Item title='Dashboard' Icon={<FaDailymotion/>} to={'#'}/> 
+              <Item title='Create User' Icon={<FaUser/>} to={'/create/user'} />
+              <Item title='Create Post' Icon={<FaHome/>} to={'/create/post'}/>
+              <Item title='Create Tag' Icon={<FaDailymotion/>} to={'/create/tag'}/> 
             </Menu>
     
             <Footer> 
@@ -54,7 +56,7 @@ const SideBar = () => {
                 <span className="mode-text text">Dark mode</span>
     
                 <Toggle open={check}  onClick={()=>{ 
-                    
+                    toggle?.();
                     setCheck(!check);
                 }}/>
                 
