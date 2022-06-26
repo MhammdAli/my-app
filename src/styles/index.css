@@ -5,7 +5,6 @@
 
 
 /******************Button Style*************************/
-
 @layer components{
   .btn{
     @apply inline-flex items-center space-x-2 py-2 px-4 rounded font-medium 
@@ -33,6 +32,33 @@
   .btn.secondary.outlined{
       @apply border-2 border-pink-500 text-pink-600
   }
+
+  
 }
 
 /*******************************************************/
+
+
+/*********************Toggle Component Style*****************************/
+
+@layer components{
+  .toggle-switch{
+    @apply absolute right-0 min-w-[60px] flex items-center justify-center rounded-md cursor-pointer 
+  }
+ .sidebar.close .toggle-switch{
+     @apply  right-auto
+  }
+ .toggle-switch .switch{
+     @apply relative flex items-center h-[22px] w-10 rounded-[25px] bg-textColor-light dark:bg-sideBar-light transition-all duration-500 ease-in     
+  }
+  .switch{
+    @apply before:content-[''] before:absolute before:h-[15px] before:w-[15px] before:rounded-[50%] before:left-[5px] 
+    before:bg-sideBar-light transition-all duration-300 dark:before:bg-primary-dark
+  }
+  .switch.open{
+    @apply before:left-[20px]
+  }
+}
+
+/************************************************************************/
+
