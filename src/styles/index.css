@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/******************Button Style*************************/
+
+@layer components{
+  .btn{
+    @apply inline-flex items-center space-x-2 py-2 px-4 rounded font-medium 
+  }
+  .btn.primary.contained{
+      @apply bg-primary-light active:bg-blue-800 text-white hover:ring-2 hover:ring-primary-lighter duration-500 transition-all
+  }
+
+  .btn.primary.outlined{
+      @apply border-2 border-primary-light 
+  }
+
+  .btn.danger.contained{
+      @apply bg-red-600 active:bg-red-800 text-white hover:ring-2 hover:ring-red-400 duration-500 transition-all
+  }
+
+  .btn.danger.outlined{
+      @apply border-2 border-red-500 text-red-600
+  }
+
+  .btn.secondary.contained{
+      @apply bg-pink-600 active:bg-pink-800 text-white hover:ring-2 hover:ring-pink-400 duration-500 transition-all
+  }
+
+  .btn.secondary.outlined{
+      @apply border-2 border-pink-500 text-pink-600
+  }
+}
+
+/*******************************************************/
