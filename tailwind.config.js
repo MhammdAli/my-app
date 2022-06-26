@@ -11,6 +11,18 @@ module.exports = {
           light : '#695CFE',
           lighter : '#9F97FE'
         },
+        textColor : { 
+          dark : "#ccc", 
+          light : '#707070' 
+        },
+        sideBar : {
+          dark : '#242526',
+          light : '#fff'
+        },
+        bodyColor : {
+          dark : '#18191a',
+          light : '#E4E9F7'
+        },
       }
     },
   },
