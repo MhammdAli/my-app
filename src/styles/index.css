@@ -1,7 +1,170 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
+@layer utilities{
+  *{
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+/*****************Root Jsx App Style ******************/
+
+@layer components{
+  .App{
+    @apply bg-bodyColor-light min-h-screen transition-all duration-500 dark:bg-bodyColor-dark
+  }
+}
+
+/******************************************************/
+
+/*****************Side Bar Components Style *************/
+
+ @layer components{
+  :selection{
+    @apply dark:bg-primary-light bg-primary-dark dark:text-textColor-dark 
+  }
+
+   /* ===== Sidebar ===== */
+  .sidebar {
+    @apply w-[250px] flex flex-col fixed top-0 left-0 h-full py-2 px-4 bg-sideBar-light  dark:bg-sideBar-dark
+    transition-all duration-500 z-50
+  }
+
+  /* ========SideBar Components Style=========*/
+  .sidebar.close { @apply w-[88px]}
+  
+  .sidebar .icon{
+    @apply min-w-[50px] rounded-md h-full flex items-center justify-center text-[20px] 
+  }
+ 
+
+  .sidebar .text,.sidebar .icon{
+    @apply text-textColor-light transition-all duration-500 dark:text-textColor-dark
+  }
+ 
+  .sidebar .text{
+    @apply text-[17px] font-medium whitespace-nowrap opacity-100
+  }
+  
+  .sidebar.close .text{
+    @apply opacity-0
+  }
+
+  .sidebar li { @apply h-[50px] flex items-center mt-[10px]}
+
+  .sidebar .header .image, .sidebar .icon{@apply min-w-[60px] rounded-md}
+
+  /****************************************/
+
+  /* ==========SIDEBAR HEADER============= */
+  .sidebar .header{
+    @apply relative
+  }
+
+  .sidebar .header .image-text{
+    @apply flex items-center
+  }
+ 
+  .sidebar .header .logo-text{
+    @apply flex flex-col
+  }
+
+  .header .image-text .name{
+    @apply mt-[2px] text-lg font-[600]
+  }
+
+
+  .header .image-text .profession{
+    @apply text-[16px] -mt-[2px] block
+  }
+
+  .sidebar .header .image{
+    @apply flex items-center justify-center
+  }
+
+  .sidebar .header .image img{
+    @apply w-10 rounded-md
+  }
+
+  .sidebar .header .toggle{
+    @apply absolute top-[50%] -right-[25px] rotate-180 -translate-y-2/4 h-[25px] w-[25px] 
+    bg-primary-light text-sideBar-light rounded-[50%] flex items-center 
+    justify-center text-[22px] 
+    cursor-pointer transition-all duration-500   
+  dark:text-textColor-dark dark:bg-primary-dark
+  }
+ 
+  .sidebar.close .toggle{
+    @apply rotate-0
+  }
+
+  .sidebar .menu{
+    @apply mt-5
+  }
+
+    /******************SIDEBAR LINKS********************************/
+
+  .sidebar li a{
+    @apply h-full flex items-center w-full rounded-md transition-all duration-500 hover:bg-primary-light
+  dark:hover:bg-primary-dark
+  }
+  
+ 
+  .sidebar li a:hover .icon,.sidebar li a:hover .text{
+    @apply text-sideBar-light dark:text-textColor-dark
+  }
+   
+  .sidebar .menu-bar{
+    @apply flex-grow flex flex-col justify-between overflow-y-scroll
+  }
+ 
+  .menu-bar::-webkit-scrollbar{
+    @apply hidden
+  }
+   
+ 
+  .sidebar .menu-bar .mode{
+    @apply rounded-md bg-primary-light relative transition-all duration-500 ease-in 
+  }
+
+  .sun-moon{
+    @apply w-[60px] h-[50px] relative flex items-center 
+  }
+
+  
+  .mode .sun-moon *{
+    @apply absolute
+  }
+
+  .mode .sun-moon .sun , .mode .sun-moon .moon{
+    @apply  w-[30px] h-[30px]
+  }
+
+  .mode .sun-moon .sun{
+    @apply opacity-0
+  }
+
+
+  .App.dark .mode .sun-moon .sun{
+    @apply opacity-100 
+  }
+
+  .App.dark .mode .sun-moon .moon{
+    @apply opacity-0
+  }
+
+  .sidebar.close .sun-moon .moon , .sidebar.close .sun-moon .sun{
+    @apply hidden
+  }
+
+ 
+ }
+
+
+/********************************************************/
+ 
 
 
 /******************Button Style*************************/
@@ -61,4 +224,22 @@
 }
 
 /************************************************************************/
+
+/**************LAYOUT*********************/
+
+@layer components{
+  .layout {
+    @apply absolute top-0 left-[250px] min-h-screen  bg-bodyColor-light
+    transition-all duration-500 dark:bg-bodyColor-dark pt-3 px-5
+  } 
+  .layout{
+    width: calc(100% - 250px); 
+  }
+  .sidebar.close ~ .layout{
+    left: 88px; 
+    width: calc(100% - 78px); 
+  }
+}
+ 
+/******************************************8*/
 
