@@ -50,8 +50,7 @@ const SideBar = () => {
             </Menu>
     
             <Footer> 
-              <Item Icon={<FaSign/>} title='Testing Icon' to={'#'}/>
-          
+              
               <li className="mode">
                 <div className="sun-moon"> 
                     <FaMoon className='moon icon'/>
