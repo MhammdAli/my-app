@@ -1,9 +1,16 @@
-import React from 'react'
-import Table from 'rc-table' 
+import React, { useEffect, useMemo, useState } from 'react'
+import Table from 'components/Table' 
 import Button from 'components/Button';
-import Center from 'components/Center';
-
-const columns = [
+import { NavLink } from 'react-router-dom';
+import { deleteTag, getTags, Tag } from 'services/Tags';
+import { toast, ToastContainer } from 'react-toastify';
+ 
+const COLS = [
+  {
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id',  
+  },
   {
     title: 'name',
     dataIndex: 'name',
@@ -13,33 +20,65 @@ const columns = [
     title: 'description',
     dataIndex: 'description',
     key: 'description', 
-  }, 
-  {
-    title: 'Operations',
-    dataIndex: '',
-    key: 'operations',
-    render: () => <div className='space-x-3 flex '>
-      <Button className='p-2 text-sm flex-1 text-center block' href='#'>Update</Button>
-      <Button className='p-2 text-sm flex-1 text-center block' variantColor='danger' href='#'>Delete</Button>
-      <Button className='p-2 text-sm flex-1 text-center block' variantColor='secondary' href='#'>View</Button>
-    </div>,
-  },
+  }
 ];
 
-const data = [
-    { name: 'Jack', description: 'sample descr....', key: '1' },
-    { name: 'Rose', description : 'sample descr....', key: '2' },
-    { name: 'Jack', description: 'sample descr....', key: '3' },
-    { name: 'Rose', description : 'sample descr....', key: '4' },
-  ];
+ 
+  
+  function Actions(data : Tag[],changeData : (data : Tag[])=>void){
+   
+   
+    return {
+      title: 'Operations',
+      dataIndex: '', 
+      render: (row : Tag) => { 
+       
+        const handleDelete = async ()=>{
+           try{
+             await deleteTag(row.id as string)
+             const newData = data.filter((currentRow : Tag)=>currentRow.id !== row.id)  
+             toast.success('tag deleted successfuly')
+             changeData(newData); 
+           }catch(err : any){
+             toast.error(err.message)
+           }
+        }
+ 
+        return (
+          <div className='space-x-3 flex '>
+            <NavLink to={`/edit/tag/${row.id}`} className='btn-sm btn primary contained'>Update</NavLink>
+            <Button className='btn-sm' variantColor='danger' href='#' onClick={handleDelete}>Delete</Button> 
+         </div>
+        )
+      }
+    }
+  }
+
   
 
 const TagsView = () => {
+
+  const [data,setData] = useState<Tag[]>([]); 
+  const columns = useMemo(()=>[...COLS,Actions(data,setData)],[data])
+ 
+  useEffect(()=>{
+    (async()=>{
+      try{ 
+        const tags = await getTags();
+        setData(tags); 
+      }catch(err : any){
+        toast.error(err.message);
+      } 
+    })()
+
+  },[])
+
+  
   return (
-    <Center className='content-center'>
-        <h1 className='text-5xl dark:text-white'>Users Data</h1>
-       <Table  className='w-full md:w-[77%] m-auto overflow-x-auto' columns={columns} data={data} /> 
-    </Center>
+    <>
+      <ToastContainer/>
+      <Table columns={columns} rows={data} title='Tags Data' rowKey={'id'}/>
+    </>
   )
 }
 

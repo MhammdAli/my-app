@@ -1,50 +1,89 @@
-import React from 'react'
-import Table from 'rc-table' 
+import React, { useEffect, useMemo, useState } from 'react'
+import Table from 'components/Table' 
 import Button from 'components/Button';
-import Center from 'components/Center';
+import { deletePost, getPosts, Post } from 'services/Posts';
+import { toast, ToastContainer } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
+ 
 
-const columns = [
+const COLS = [
+  {
+    title : 'id',
+    dataIndex : 'id' 
+  },
+  {
+    title : 'description',
+    dataIndex : 'description'
+  },
   {
     title: 'Title',
-    dataIndex: 'title',
-    key: 'title',  
+    dataIndex: 'title', 
   },
   {
     title: 'posted Date',
-    dataIndex: 'posted_date',
-    key: 'posted_date', 
-  },
-  {
-    title: 'AuthorId',
-    dataIndex: 'author_id',
-    key: 'author_id', 
-  }, 
-  {
-    title: 'Operations',
-    dataIndex: '',
-    key: 'operations',
-    render: () => <div className='space-x-3 flex '>
-      <Button className='p-2 text-sm flex-1 text-center block' href='#'>Update</Button>
-      <Button className='p-2 text-sm flex-1 text-center block' variantColor='danger' href='#'>Delete</Button>
-      <Button className='p-2 text-sm flex-1 text-center block' variantColor='secondary' href='#'>View</Button>
-    </div>,
-  },
+    dataIndex: 'postedDate', 
+  } 
 ];
 
-const data = [
-    { title: 'Jack', posted_date: 'Mon.08.2039',author_id:1, key: '1' },
-    { title: 'Rose', posted_date : 'Mon.08.2039',author_id:2, key: '2' },
-    { title: 'Jack', posted_date: 'Mon.08.2039',author_id:3, key: '3' },
-    { title: 'Rose', posted_date : 'Mon.08.2039',author_id:4, key: '4' },
-  ];
-  
+ 
+
+  function Actions(data : Post[],changeData : (data : Post[])=>void){
+   
+   
+    return {
+      title: 'Operations',
+      dataIndex: '', 
+      render: (row : Post) => { 
+       
+        const handleDelete = async()=>{
+           
+          try{
+            await deletePost(row.id as string);
+            const newData = data.filter((currentRow : Post)=>currentRow.id !== row.id) 
+            changeData(newData);
+            toast.success('post deleted successfuly')
+          }catch(err : any){
+            toast.error(err.message);
+          }
+
+        }
+
+    
+
+        return (
+          <div className='space-x-3 flex '>
+            <NavLink to={`/edit/post/${row.id}`} className='btn-sm btn primary contained'>Update</NavLink>
+            <Button className='btn-sm' variantColor='danger' href='#' onClick={handleDelete}>Delete</Button> 
+         </div>
+        )
+      }
+    }
+  }
+
 
 const PostsView = () => {
+
+  const [Posts,setPosts] = useState<Post[]>([]);
+  const columns = useMemo(()=>[...COLS,Actions(Posts,setPosts)],[Posts])
+  useEffect(()=>{
+
+    (async()=>{
+        try{
+          const posts = await getPosts();
+          setPosts(posts)
+        }catch(err : any){
+          toast.error(err.message)
+        }
+    })();
+    
+  },[])
+
+
   return (
-    <Center className='content-center'>
-        <h1 className='text-5xl dark:text-white'>Posts Data</h1>
-       <Table  className='w-full md:w-[77%] m-auto overflow-x-auto' columns={columns} data={data} /> 
-    </Center>
+    <div>
+      <ToastContainer />
+      <Table columns={columns} rows={Posts} title='Posts Data' rowKey='id'/>
+    </div>
   )
 }
 
