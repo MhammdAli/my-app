@@ -1,59 +1,104 @@
-import React, { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Button from 'components/Button';
 import Center from 'components/Center';
 import Input from 'components/Input';
-import { FaBlog, FaClock, FaComment, FaHeading, FaUser } from 'react-icons/fa';
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated'
+import { FaBlog, FaClock, FaComment, FaHeading, FaTags, FaUser } from 'react-icons/fa';
 import TextArea from 'components/TextArea';
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
+import { CustomSelect } from 'components/CustomSelect';
+import {createPost,Post} from 'services/Posts';
+import {ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'
+import useTags from 'hooks/useTags';
+import useUsers from 'hooks/useUsers';
+import { createPostValidationSchema } from 'Validations';
+import HelperText from 'components/HelperText';
+ 
+interface Options {
+  value ?: number | undefined,
+  label ?: string  
+}
 
-const animatedComponents = makeAnimated();
-  
+const CreatePosts = (props : any) => {
+ 
+  const [loading , setLoading] = useState<boolean>(false);
+  const [usersOptions,setUsers] = useState< Options[]>([]);
+ 
+  const {Tags} = useTags();
+  const {Users} = useUsers();
+  const handleSubmit = async (post : Post,helpers : FormikHelpers<Post> )=>{ 
+    setLoading(true);
+    try{
+       await createPost(post)
+       toast.success('Post Added Successfuly') 
+       helpers.resetForm();
+    }catch(err : any ){ 
+       toast.error('somthing went wrong')   
+    }finally{
+      setLoading(false);
+    }
 
-const SampleData = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
+  }
 
-const CreatePost = (props : any) => {
+  useMemo(()=>{
+    const users : Options[] = Users.map(({id,firstName,lastName})=>({value : id,label : `${firstName} ${lastName}` })) as Options[]
+    setUsers(users) 
+  },[Users])
 
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  // Just For Testing
-  const handleChange = (selectedOption : any) => {
-    setSelectedOption(selectedOption)
-    console.log(selectedOption)
-  };
-
+ 
   return (
      <Center>
-        <form className='md:w-10/12 w-11/12'>
+        <div className='md:w-10/12 w-11/12'>
            <div className='space-y-3'>
               <h1 className='dark:text-textColor-dark md:text-5xl text-3xl py-2'>Create Post</h1>
-           
-              <Input startIcon={<FaHeading/>} placeholder='Enter Your Title'/>
-              <TextArea rows={3} StartIcon={<FaComment size={15}/>} placeholder='description' />
-              <Input  startIcon={<FaUser/>} placeholder='Author Id'/>
-              <Input  startIcon={<FaClock/>} placeholder='Posted Date' type='date'/>
+                <ToastContainer/>
+                <Formik
+                    initialValues={{
+                      title : '',
+                      description : '',
+                      postedDate : '', 
+                      tagIds : [], 
+                    }}
+                    onSubmit={handleSubmit} 
+                    validationSchema={createPostValidationSchema} 
+                >
+                {( props )=>(
+                 <Form method='POST' className='space-y-3'>
              
-              <Select
-                value={selectedOption}
-                onChange={handleChange}
-                options={SampleData}
-                isMulti
-                components={animatedComponents}
-                placeholder='Select Tags'  
-              />
+                    <Field as={Input} startIcon={<FaHeading/>} name='title'  placeholder='Enter Your Title' error={!!props.errors.title && props.touched.title} errorText={props.errors.title}/>
+                    <TextArea value={props.values.description} onChange={props.handleChange} rows={3} StartIcon={<FaComment size={15}/>} placeholder='description' name='description' error={!!props.errors.description && props.touched.description} errorText={props.errors.description} />
+                    <Field as={Input} name='postedDate' startIcon={<FaClock/>}  placeholder='Posted Date' type='date' error={!!props.errors.postedDate && props.touched.postedDate} errorText={props.errors.postedDate} />
+                   
+                    <Field 
+                        name="userId"
+                        options={usersOptions}
+                        component={CustomSelect} 
+                        placeholder="Select Owner"  
+                        error={!!props.errors.userId}
+                        errorText={props.errors.userId}
+                        startIcon={<FaUser/>}
+                    />
+                    
+                    <Field 
+                        name="tagIds"
+                        options={Tags.map(({id,name})=>({value : id,label : name}))}
+                        component={CustomSelect} 
+                        placeholder="Select Tags" 
+                        isMulti  
+                        startIcon={<FaTags/>}
+                    />
 
-              <div className='flex justify-end'>
-                <Button StartIcon={<FaBlog/>} title='Create Post' type='submit' />
-              </div>
 
+                    <div className='flex justify-end'>
+                      <Button StartIcon={<FaBlog/>} title='Create Post' type='submit' loading={loading} disabled={loading} />
+                    </div>
+                </Form>
+            )}
+        </Formik>
            </div>
-        </form> 
+        </div> 
      </Center>
   )
 }
 
-export default CreatePost
+export default CreatePosts
