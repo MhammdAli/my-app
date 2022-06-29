@@ -254,16 +254,21 @@
   }
 
   table tr:nth-child(even){
-    @apply hover:bg-primary-light transition-all duration-500
+    @apply dark:hover:bg-primary-dark transition-all duration-500 bg-primary-lighten dark:bg-primary-dark
   }
 
 
   table tr{
-    @apply hover:bg-primary-lighter
+    @apply dark:hover:bg-primary-dark hover:bg-primary-lighten
   }
 
   table th{
     @apply py-3 text-center bg-primary-light text-white
   }
 
+  .btn-sm{
+    @apply text-sm flex-1 p-0 flex items-center justify-center
+  }
+
 }
+
