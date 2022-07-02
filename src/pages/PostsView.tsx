@@ -1,89 +1,49 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Table from 'components/Table' 
-import Button from 'components/Button';
-import { deletePost, getPosts, Post } from 'services/Posts';
-import { toast, ToastContainer } from 'react-toastify';
-import { NavLink } from 'react-router-dom';
+import { useCallback } from 'react'
+import { getPosts } from 'services/Posts';
+import { toast, ToastContainer } from 'react-toastify'; 
+import Center from 'components/Center';
+import { AgGridReact } from 'ag-grid-react';
+import { GridReadyEvent } from 'ag-grid-community';
+import { useTheme } from 'hooks/useTheme';
+import {COLS,CommonColDefs} from 'ng-Grid/columnsDefs/Posts';
  
-
-const COLS = [
-  {
-    title : 'id',
-    dataIndex : 'id' 
-  },
-  {
-    title : 'description',
-    dataIndex : 'description'
-  },
-  {
-    title: 'Title',
-    dataIndex: 'title', 
-  },
-  {
-    title: 'posted Date',
-    dataIndex: 'postedDate', 
-  } 
-];
-
- 
-
-  function Actions(data : Post[],changeData : (data : Post[])=>void){
-   
-   
-    return {
-      title: 'Operations',
-      dataIndex: '', 
-      render: (row : Post) => { 
-       
-        const handleDelete = async()=>{
-           
-          try{
-            await deletePost(row.id as string);
-            const newData = data.filter((currentRow : Post)=>currentRow.id !== row.id) 
-            changeData(newData);
-            toast.success('post deleted successfuly')
-          }catch(err : any){
-            toast.error(err.message);
-          }
-
-        }
-
-    
-
-        return (
-          <div className='space-x-3 flex '>
-            <NavLink to={`/edit/post/${row.id}`} className='btn-sm btn primary contained'>Update</NavLink>
-            <Button className='btn-sm' variantColor='danger' href='#' onClick={handleDelete}>Delete</Button> 
-         </div>
-        )
-      }
-    }
-  }
 
 
 const PostsView = () => {
 
-  const [Posts,setPosts] = useState<Post[]>([]);
-  const columns = useMemo(()=>[...COLS,Actions(Posts,setPosts)],[Posts])
-  useEffect(()=>{
+  const {mode} = useTheme();
 
-    (async()=>{
-        try{
-          const posts = await getPosts();
-          setPosts(posts)
-        }catch(err : any){
-          toast.error(err.message)
-        }
-    })();
-    
+ 
+  const gridReady = useCallback(async (event: GridReadyEvent)=>{ 
+    try{
+      const Posts = await getPosts();
+      event.api.setRowData(Posts) 
+    }catch(err : any){
+      toast.error(err?.message)
+    } 
   },[])
 
-
   return (
-    <div>
-      <ToastContainer />
-      <Table columns={columns} rows={Posts} title='Posts Data' rowKey='id'/>
-    </div>
+    <Center>
+      <ToastContainer/> 
+      <h1 className='dark:text-white text-black text-4xl my-4'>Post View</h1>
+      <div
+        className={`${mode === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'} w-full`}
+        style={{  
+          height : 530,
+        }}
+      >
+        <AgGridReact
+          columnDefs={COLS}
+          defaultColDef={CommonColDefs}
+          onGridReady={gridReady}  
+          enableBrowserTooltips 
+          animateRows
+          pagination 
+          paginationPageSize={10}  
+        /> 
+      </div> 
+    </Center>
   )
 }
 

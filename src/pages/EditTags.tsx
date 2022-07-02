@@ -79,7 +79,7 @@ const EditTags = () => {
                   {( props )=>(
                      <Form  method='POST' className='space-y-3'>
 
-                        <Field as={Input} value={tags.id||''} disabled startIcon={<FaIdBadge/>} name='id' placeholder='id'/>
+                        <Field as={Input} value={tags.id||''} disabled startIcon={<FaIdBadge/>} name='id' placeholder='id' style={{backgroundColor : '#bababa'}}/>
                         <Field as={Input} name='name' startIcon={<FaTag/>} placeholder='Tag Name'  error={!!props.errors.name} errorText={props.errors.name} />
                         <TextArea value={props.values.description} onChange={props.handleChange}  rows={3} StartIcon={<FaComment size={15}/>} placeholder='description' name='description'  error={!!props.errors.description && props.touched.description} errorText={props.errors.description}  />
                     

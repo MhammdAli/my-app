@@ -1,94 +1,69 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Table from 'components/Table' 
-import Button from 'components/Button';
-import { NavLink } from 'react-router-dom';
+import React, { useCallback, useState } from 'react'
 import {toast, ToastContainer} from 'react-toastify';
-import {User,deleteUser, getUsers} from 'services/users'
-const COLS = [
-  {
-    title: 'Id',
-    dataIndex: 'id', 
-  },
-  {
-    title: 'First Name',
-    dataIndex: 'firstName', 
-  },
-  {
-    title: 'last Name',
-    dataIndex: 'lastName', 
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email', 
-  },
-  {
-    title: 'mobile',
-    dataIndex: 'mobile',  
-  } 
-];
- 
- 
- 
-  function Actions(data : User[],changeData : (data : User[])=>void){
-   
-   
-    return {
-      title: 'Operations',
-      dataIndex: '', 
-      render: (row : User) => { 
-       
-        const handleDelete = async()=>{
-           
-          try{
-            await deleteUser(row.id as string);
-            const newData = data.filter((currentRow : User)=>currentRow.id !== row.id) 
-            changeData(newData);
-            toast.success('user deleted successfuly')
-          }catch(err : any){
-            toast.error(err.message);
-          }
-
-        }
-
-    
-
-        return (
-          <div className='space-x-3 flex '>
-            <NavLink to={`/edit/user/${row.id}`} className='btn-sm btn primary contained'>Update</NavLink>
-            <Button className='btn-sm' variantColor='danger' href='#' onClick={handleDelete}>Delete</Button> 
-         </div>
-        )
-      }
-    }
-  }
-
+import {getUsers} from 'services/users'
+import { AgGridReact } from 'ag-grid-react';
+import { GridApi, GridReadyEvent } from 'ag-grid-community';
+import { useTheme } from 'hooks/useTheme'; 
+import Center from 'components/Center';
+import Input from 'components/Input';
+import { FaSearch } from 'react-icons/fa'; 
+import PageSizeSelection from 'components/PageSizeSelection';
+import {COLS,CommonColDefs} from 'ng-Grid/columnsDefs/users'
 
 const UsersView = () => {
  
-
-  const [users,setUsers] = useState<User[]>([]);
-  const columns = useMemo(()=>[...COLS,Actions(users,setUsers)],[users])
- 
-
-  useEffect(()=>{
-
-    (async()=>{
-        try{
-          const users = await getUsers();
-          setUsers(users)
-        }catch(err : any){
-          toast.error(err.message)
-        }
-    })();
-    
-  },[])
-
+  const {mode} = useTheme();
+  const [gridApi,setGridApi] = useState<GridApi>();
   
+  
+  const gridReady = useCallback(async (event: GridReadyEvent)=>{ 
+    setGridApi(event.api)
+    try{
+      const users = await getUsers();
+      event.api.setRowData(users) 
+    }catch(err : any){
+      toast.error(err?.message)
+    } 
+ },[])
+
+
+
+
+  const handleQuickFilter = useCallback(({target : {value : Value}} : any)=>{ 
+    gridApi?.setQuickFilter(Value)  
+  },[gridApi])
+  
+
+  const onPageSizeHandler = useCallback((pageSize : number)=>{
+    gridApi?.paginationSetPageSize(pageSize)
+  },[gridApi])
+
   return (
-    <div>
+    <Center>
       <ToastContainer />
-      <Table columns={columns} rows={users} title='Users Data' rowKey='id'/>
-    </div>
+      <h1 className='dark:text-white text-black text-4xl my-2'>Users View</h1>
+      <div className='flex w-full my-3'>
+        <Input startIcon={<FaSearch/>} onChange={handleQuickFilter}/>
+        <PageSizeSelection onPageSizeChange={onPageSizeHandler} />
+      </div>
+
+      <div
+        className={`${mode === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'} w-full`}
+        style={{  
+          height : 530,
+        }}
+      >
+        <AgGridReact
+          columnDefs={COLS}
+          defaultColDef={CommonColDefs}
+          onGridReady={gridReady}  
+          enableBrowserTooltips 
+          animateRows
+          pagination 
+          paginationPageSize={10} 
+        /> 
+      </div> 
+    </Center>
    
   )
 }

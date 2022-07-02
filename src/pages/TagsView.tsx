@@ -1,84 +1,49 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Table from 'components/Table' 
-import Button from 'components/Button';
-import { NavLink } from 'react-router-dom';
-import { deleteTag, getTags, Tag } from 'services/Tags';
+import { useCallback } from 'react'
+import { getTags } from 'services/Tags';
 import { toast, ToastContainer } from 'react-toastify';
+import {AgGridReact} from 'ag-grid-react';
+import {GridReadyEvent} from 'ag-grid-community';
+import { useTheme } from 'hooks/useTheme';
+import Center from 'components/Center';  
+import {COLS,CommonColDefs} from 'ng-Grid/columnsDefs/Tags'
  
-const COLS = [
-  {
-    title: 'id',
-    dataIndex: 'id',
-    key: 'id',  
-  },
-  {
-    title: 'name',
-    dataIndex: 'name',
-    key: 'name',  
-  },
-  {
-    title: 'description',
-    dataIndex: 'description',
-    key: 'description', 
-  }
-];
-
- 
-  
-  function Actions(data : Tag[],changeData : (data : Tag[])=>void){
-   
-   
-    return {
-      title: 'Operations',
-      dataIndex: '', 
-      render: (row : Tag) => { 
-       
-        const handleDelete = async ()=>{
-           try{
-             await deleteTag(row.id as string)
-             const newData = data.filter((currentRow : Tag)=>currentRow.id !== row.id)  
-             toast.success('tag deleted successfuly')
-             changeData(newData); 
-           }catch(err : any){
-             toast.error(err.message)
-           }
-        }
- 
-        return (
-          <div className='space-x-3 flex '>
-            <NavLink to={`/edit/tag/${row.id}`} className='btn-sm btn primary contained'>Update</NavLink>
-            <Button className='btn-sm' variantColor='danger' href='#' onClick={handleDelete}>Delete</Button> 
-         </div>
-        )
-      }
-    }
-  }
-
-  
-
 const TagsView = () => {
 
-  const [data,setData] = useState<Tag[]>([]); 
-  const columns = useMemo(()=>[...COLS,Actions(data,setData)],[data])
- 
-  useEffect(()=>{
-    (async()=>{
-      try{ 
-        const tags = await getTags();
-        setData(tags); 
-      }catch(err : any){
-        toast.error(err.message);
-      } 
-    })()
+  const {mode} = useTheme();
+  
+   
 
+  const gridReady = useCallback(async (event: GridReadyEvent)=>{ 
+      try{
+        const tags = await getTags();
+        event.api.setRowData(tags) 
+      }catch(err : any){
+        toast.error(err?.message)
+      } 
   },[])
 
   
   return (
-    <>
-      <ToastContainer/>
-      <Table columns={columns} rows={data} title='Tags Data' rowKey={'id'}/>
-    </>
+    <Center>
+      <ToastContainer/> 
+      <h1 className='dark:text-white text-black text-4xl my-4'>Tags View</h1>
+      <div
+        className={`${mode === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'} w-full`}
+        style={{  
+          height : 530,
+        }}
+      >
+        <AgGridReact
+          columnDefs={COLS}
+          defaultColDef={CommonColDefs}
+          onGridReady={gridReady}  
+          enableBrowserTooltips 
+          animateRows
+          pagination 
+          paginationPageSize={10}  
+        /> 
+      </div> 
+    </Center>
   )
 }
 

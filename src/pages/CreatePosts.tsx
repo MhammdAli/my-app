@@ -4,7 +4,7 @@ import Center from 'components/Center';
 import Input from 'components/Input';
 import { FaBlog, FaClock, FaComment, FaHeading, FaTags, FaUser } from 'react-icons/fa';
 import TextArea from 'components/TextArea';
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { CustomSelect } from 'components/CustomSelect';
 import {createPost,Post} from 'services/Posts';
 import {ToastContainer,toast} from 'react-toastify';
@@ -12,7 +12,6 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import useTags from 'hooks/useTags';
 import useUsers from 'hooks/useUsers';
 import { createPostValidationSchema } from 'Validations';
-import HelperText from 'components/HelperText';
  
 interface Options {
   value ?: number | undefined,
@@ -57,7 +56,8 @@ const CreatePosts = (props : any) => {
                       title : '',
                       description : '',
                       postedDate : '', 
-                      tagIds : [], 
+                      tagIds : [],
+                      userId : '' 
                     }}
                     onSubmit={handleSubmit} 
                     validationSchema={createPostValidationSchema} 
@@ -74,7 +74,7 @@ const CreatePosts = (props : any) => {
                         options={usersOptions}
                         component={CustomSelect} 
                         placeholder="Select Owner"  
-                        error={!!props.errors.userId}
+                        error={!!props.errors.userId && !!props.touched.userId}
                         errorText={props.errors.userId}
                         startIcon={<FaUser/>}
                     />
