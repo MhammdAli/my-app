@@ -29,6 +29,15 @@ module.exports = {
           dark : '#fff',
           light : '#1e81b0'
         },
+      },
+      keyframes: {
+        wiggle: {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" }
+        }
+      },
+      animation: {
+        scale: "wiggle 500ms ease-in-out", 
       }
     },
   },
